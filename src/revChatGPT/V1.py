@@ -17,7 +17,15 @@ from os import environ
 from os import getenv
 from typing import NoReturn
 
-import requests
+import cloudscraper
+requests = cloudscraper.create_scraper(
+    browser={
+        'browser': 'firefox',
+        'platform': 'windows',
+        'mobile': False
+    }
+)
+
 from httpx import AsyncClient
 from OpenAIAuth import Authenticator
 from OpenAIAuth import Error as AuthError
@@ -74,7 +82,7 @@ def logger(is_timed: bool):
     return decorator
 
 
-BASE_URL = environ.get("CHATGPT_BASE_URL") or "https://bypass.duti.tech/api/"
+BASE_URL = environ.get("CHATGPT_BASE_URL") or "https://app.openai.com/api/"
 
 
 class ErrorType:
