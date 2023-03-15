@@ -16,16 +16,8 @@ from functools import wraps
 from os import environ
 from os import getenv
 from typing import NoReturn
-
+import requests
 import cloudscraper
-requests = cloudscraper.create_scraper(
-    browser={
-        'browser': 'firefox',
-        'platform': 'windows',
-        'mobile': False
-    }
-)
-
 from httpx import AsyncClient
 from OpenAIAuth import Authenticator
 from OpenAIAuth import Error as AuthError
@@ -204,7 +196,13 @@ class Chatbot:
             self.cache_path = osp.join(user_home, ".config", "revChatGPT", "cache.json")
 
         self.config = config
-        self.session = session_client() if session_client else requests.Session()
+        self.session = (
+            session_client()
+            if session_client
+            else cloudscraper.create_scraper(
+                browser={"browser": "firefox", "platform": "windows", "mobile": False}
+            )
+        )
         try:
             cached_access_token = self.__get_cached_access_token(
                 self.config.get("email", None),
